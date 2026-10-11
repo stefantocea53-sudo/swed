@@ -1,1 +1,697 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Freecash x </title>
+  <link rel="icon" href="data:," />
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #030704;
+      --card: #0b1710;
+      --card2: #101f16;
+      --green: #39ff88;
+      --green2: #19c762;
+      --text: #f5fff7;
+      --muted: #a7b8ab;
+      --yellow: #ffd56a;
+      --red: #ff5c6c;
+      --line: rgba(255,255,255,.10);
+      --shadow: 0 24px 70px rgba(0,0,0,.55);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(57,255,136,.35), transparent 35%),
+        radial-gradient(circle at 100% 25%, rgba(255,213,106,.16), transparent 28%),
+        linear-gradient(180deg, #06140b 0%, #030704 65%, #020302 100%);
+      overflow-x: hidden;
+    }
+
+    body.lock {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .age-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background:
+        radial-gradient(circle at top, rgba(57,255,136,.34), transparent 38%),
+        rgba(2,5,3,.97);
+      transition: .25s ease;
+    }
+
+    .age-gate.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(1.03);
+    }
+
+    .age-box {
+      width: 100%;
+      max-width: 360px;
+      padding: 26px 20px 20px;
+      text-align: center;
+      border-radius: 32px;
+      background: linear-gradient(180deg, rgba(20,38,27,.96), rgba(6,12,8,.98));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+    }
+
+    .age-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 24px;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+      color: #031108;
+      font-size: 28px;
+      font-weight: 1000;
+      background: linear-gradient(180deg, #67ffa3, #20d66b);
+      box-shadow: 0 16px 36px rgba(57,255,136,.28);
+    }
+
+    .age-box h2 {
+      font-size: 42px;
+      line-height: .9;
+      letter-spacing: -.06em;
+      margin-bottom: 10px;
+    }
+
+    .age-box p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+
+    .age-actions {
+      display: grid;
+      gap: 10px;
+    }
+
+    .age-actions button {
+      border: 0;
+      min-height: 56px;
+      border-radius: 18px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .yes {
+      color: #031108;
+      background: linear-gradient(180deg, #67ffa3, #20d66b);
+      box-shadow: 0 16px 30px rgba(32,214,107,.24);
+    }
+
+    .no {
+      color: #e8f3eb;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .deny {
+      display: none;
+      margin-top: 12px;
+      color: #ffc0c7;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 14px 14px 112px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-top: 4px;
+    }
+
+    .brand-combo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 12px 34px rgba(0,0,0,.28);
+    }
+
+    .brand-combo img {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: rgba(255,255,255,.08);
+    }
+
+    .brand-combo span {
+      color: var(--green);
+      font-size: 18px;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .hero {
+      min-height: 72vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4px 0 20px;
+    }
+
+    .payout-badge {
+      width: fit-content;
+      margin: 0 auto 24px;
+      padding: 10px 15px;
+      border-radius: 999px;
+      color: #baffd0;
+      background: rgba(57,255,136,.12);
+      border: 1px solid rgba(57,255,136,.34);
+      box-shadow: inset 0 0 20px rgba(57,255,136,.05);
+      font-size: 14px;
+      font-weight: 1000;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: clamp(38px, 12vw, 54px);
+      line-height: .98;
+      letter-spacing: -.065em;
+      font-weight: 1000;
+      margin-bottom: 18px;
+    }
+
+    h1 span {
+      color: var(--green);
+      text-shadow: 0 0 30px rgba(57,255,136,.25);
+    }
+
+    .mini-text {
+      max-width: 335px;
+      margin: 0 auto 22px;
+      text-align: center;
+      color: #dbe6de;
+      font-size: 17px;
+      line-height: 1.45;
+      font-weight: 750;
+    }
+
+    .chips {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 0 auto 26px;
+      max-width: 350px;
+    }
+
+    .chip {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      color: #f4fff7;
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.12);
+      font-size: 13px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .section-title {
+      margin: 22px 0 12px;
+      color: #eee9f6;
+      font-size: 13px;
+      font-weight: 1000;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+
+    .offer-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 112px;
+      padding: 16px;
+      border-radius: 28px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.11);
+      box-shadow: 0 18px 48px rgba(0,0,0,.32);
+    }
+
+    .play {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      background: rgba(57,255,136,.12);
+      border: 4px solid var(--green);
+      color: #fff;
+      font-size: 20px;
+      box-shadow: 0 0 25px rgba(57,255,136,.26);
+    }
+
+    .offer-card strong {
+      display: block;
+      max-width: 205px;
+      margin-bottom: 4px;
+      font-size: 18px;
+      line-height: 1.12;
+      letter-spacing: -.03em;
+    }
+
+    .offer-card span {
+      color: #dbcfe0;
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 760;
+    }
+
+    .hot {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--yellow);
+      color: #3a2500;
+      font-size: 11px;
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .rating {
+      position: absolute;
+      right: 20px;
+      bottom: 17px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 1000;
+    }
+
+    .rating i {
+      color: var(--yellow);
+      font-style: normal;
+    }
+
+    .tip-card {
+      margin-top: 18px;
+      padding: 24px 22px 19px;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025)),
+        radial-gradient(circle at top left, rgba(57,255,136,.12), transparent 34%);
+      border: 1px solid rgba(156,255,188,.22);
+      overflow: hidden;
+      box-shadow: 0 18px 48px rgba(0,0,0,.30);
+    }
+
+    .tip-label {
+      color: var(--yellow);
+      font-size: 14px;
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: -.02em;
+      margin-bottom: 18px;
+    }
+
+    .tip-card h2 {
+      font-size: 29px;
+      line-height: 1.08;
+      letter-spacing: -.055em;
+      margin-bottom: 15px;
+    }
+
+    .tip-card h2 span {
+      color: var(--yellow);
+    }
+
+    .tip-card p {
+      color: #eadff0;
+      font-size: 15px;
+      line-height: 1.45;
+      font-weight: 760;
+      margin-bottom: 18px;
+    }
+
+    .rainbow {
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #39ff88, #e8ff3f, #ffbb38, #ff6b4a);
+      box-shadow: 0 0 20px rgba(57,255,136,.22);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .mini-step {
+      min-height: 180px;
+      padding: 18px 10px 12px;
+      border-radius: 18px;
+      text-align: center;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .mini-step .big {
+      display: block;
+      color: var(--green);
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 1000;
+      margin-bottom: 10px;
+    }
+
+    .mini-step .icon {
+      display: block;
+      color: var(--green);
+      font-size: 32px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .mini-step strong {
+      display: block;
+      color: #fff;
+      font-size: 15px;
+      line-height: 1.12;
+      letter-spacing: -.035em;
+      margin-bottom: 10px;
+    }
+
+    .mini-step p {
+      color: #b8c7bd;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .cashout {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .cashout span {
+      padding: 9px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      color: #d7e7db;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .note {
+      margin-top: 12px;
+      color: #8fa596;
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .sticky {
+      position: fixed;
+      left: 50%;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      width: min(430px, calc(100% - 24px));
+      z-index: 20;
+      padding: 10px;
+      border-radius: 26px;
+      background: rgba(3,7,4,.78);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 55px rgba(0,0,0,.55);
+    }
+
+    .cta {
+      min-height: 64px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #031108;
+      background: linear-gradient(180deg, #67ffa3, #20d66b);
+      box-shadow: 0 16px 34px rgba(32,214,107,.28);
+      font-weight: 1000;
+      font-size: 18px;
+      letter-spacing: -.035em;
+      text-align: center;
+    }
+
+    .cta small {
+      display: block;
+      font-size: 11px;
+      font-weight: 850;
+      opacity: .72;
+      margin-top: 2px;
+      letter-spacing: 0;
+    }
+
+    footer {
+      padding: 28px 0 8px;
+      text-align: center;
+      color: #718477;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    footer a {
+      margin: 0 7px;
+      color: #7f9686;
+    }
+
+    @media (max-width: 370px) {
+      .chips {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-step {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body class="lock">
+
+  <div class="age-gate" id="ageGate">
+    <div class="age-box">
+      <div class="age-icon">21+</div>
+      <h2>Är du 21 år eller äldre?</h2>
+      <p>Den här sidan är endast avsedd för besökare som är 21 år eller äldre.</p>
+
+      <div class="age-actions">
+        <button class="yes" id="yesBtn">Ja, jag är 21 år eller äldre</button>
+        <button class="no" id="noBtn">Nej, jag är yngre</button>
+      </div>
+
+      <div class="deny" id="denyMsg">
+        Tyvärr, du kan inte visa den här sidan.
+      </div>
+    </div>
+  </div>
+
+  <main class="page">
+
+    <header class="top">
+      <div class="brand-combo">
+        <img src="assets/freecash-logo.webp" alt="Freecash">
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="payout-badge">✓ Över 50 000 000 € har redan betalats ut</div>
+
+      <h1>
+        Få belöningar för din <span>skärmtid</span>
+      </h1>
+
+      <p class="mini-text">
+        Gör din skärmtid mer värd och tjäna riktiga belöningar med Freecash.
+      </p>
+
+      <div class="chips">
+        <div class="chip">⚡ Snabb utbetalning</div>
+        <div class="chip">🔒 Säkert konto</div>
+        <div class="chip">🎁 Dagliga bonusar</div>
+        <div class="chip">📱 Tjäna på din skärmtid</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-label">⚡ Proffstips</div>
+        <h2>Lås upp <span>bättre belöningar</span></h2>
+        <p>Slutför 2–3 starterbjudanden för att låsa upp fler möjligheter och bättre belöningar.</p>
+        <div class="rainbow"></div>
+      </div>
+
+      <div class="section-title">Rekommenderat erbjudande</div>
+
+      <div class="offer-card">
+        <div class="play">▶</div>
+        <div>
+          <strong>Tjäna belöningar med din skärmtid</strong>
+          <span>Upptäck erbjudanden, slutför enkla uppgifter och tjäna belöningar.</span>
+        </div>
+        <div class="hot">Hett erbjudande</div>
+        <div class="rating"><i>★</i> 5,0</div>
+      </div>
+    </section>
+
+    <div class="section-title">Så fungerar det</div>
+
+    <section class="steps-grid">
+      <div class="mini-step">
+        <span class="big">1</span>
+        <span class="icon">＋</span>
+        <strong>Välj ett erbjudande</strong>
+        <p>Välj en tillgänglig uppgift på ditt konto.</p>
+      </div>
+
+      <div class="mini-step">
+        <span class="big">2</span>
+        <span class="icon">✓</span>
+        <strong>Slutför uppgifterna</strong>
+        <p>Slutför de första erbjudandena för att låsa upp bättre belöningar.</p>
+      </div>
+
+      <div class="mini-step">
+        <span class="big">3</span>
+        <span class="icon">$</span>
+        <strong>Ta ut dina pengar</strong>
+        <p>Ta ut dina belöningar snabbt med något av de tillgängliga alternativen.</p>
+      </div>
+    </section>
+
+    <div class="cashout">
+      <span>PayPal</span>
+      <span>Krypto</span>
+      <span>Presentkort</span>
+    </div>
+
+    <p class="note">
+      Belöningar är inte garanterade och kan variera beroende på erbjudande, användare och tillgänglighet.
+    </p>
+
+    <footer>
+      <a href="#">Integritet</a>
+      <a href="#">Villkor</a>
+      <a href="#">Ansvarsfriskrivning</a><br>
+      © 2026
+    </footer>
+
+  </main>
+
+  <div class="sticky">
+    <a
+      class="cta"
+      href="https://taprkr.com/r/eyJ0IjoiZnJlZWNhc2gtY3BpIiwidGlkIjoiNDM1YWY5Y2Y2OGRlZGU5Y2EyNWMiLCJ0cyI6MTc4NDI4NTM2MTk4N30?s1=bonefire&feb=1"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span>
+        Registrera dig och få 10 € i bonus →
+        <small>Gör din skärmtid mer värd och tjäna belöningar</small>
+      </span>
+    </a>
+  </div>
+
+  <script>
+    const ageGate = document.getElementById("ageGate");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const denyMsg = document.getElementById("denyMsg");
+
+    yesBtn.addEventListener("click", function () {
+      ageGate.classList.add("hide");
+      document.body.classList.remove("lock");
+      localStorage.setItem("age21", "yes");
+    });
+
+    noBtn.addEventListener("click", function () {
+      denyMsg.style.display = "block";
+    });
+
+    if (localStorage.getItem("age21") === "yes") {
+      ageGate.classList.add("hide");
+      document.body.classList.remove("lock");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const query = window.location.search;
+
+      if (!query) return;
+
+      document.querySelectorAll("a[href^='http']").forEach(function (link) {
+        const href = link.getAttribute("href");
+
+        if (href.includes("?")) {
+          link.setAttribute("href", href + query.replace("?", "&"));
+        } else {
+          link.setAttribute("href", href + query);
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
